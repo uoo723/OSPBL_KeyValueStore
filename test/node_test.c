@@ -5,31 +5,31 @@
 void print(node_t *);
 
 int main() {
-    node_t *list = init();
+    node_t *list = ll_create();
 
     if (list == NULL) {
         return 0;
     }
 
-    insert(list, 1, "hello");
-    insert(list, 2, "world");
-    insert(list, 3, "Han");
-    insert(list, 4, "Sangwoo");
-    insert(list, 5, "woo");
-    insert(list, 5, "aa");
+    ll_insert(list, 1, "hello");
+    ll_insert(list, 2, "world");
+    ll_insert(list, 3, "Han");
+    ll_insert(list, 4, "Sangwoo");
+    ll_insert(list, 5, "woo");
+    ll_insert(list, 5, "aa");
     print(list);
 
-    printf("delete test\n");
-    delete(list, 6);
-    delete(list, 4);
+    printf("ll_delete test\n");
+    ll_delete(list, 6);
+    ll_delete(list, 4);
     print(list);
 
-    printf("get test\n");
-    node_t *temp = get(list, 1);
+    printf("ll_get test\n");
+    node_t *temp = ll_get(list, 1);
     printf("key: %d, value: %s\n", temp->key, temp->value);
-    temp = get(list, 6);
+    temp = ll_get(list, 6);
     if (temp == NULL) {
-        printf("get is null\n");
+        printf("ll_get is null\n");
     }
     return 0;
 }
