@@ -4,7 +4,7 @@
 #include "node.h"
 #include "msg.h"
 
-node_t init() {
+node_t *init() {
     node_t *head = NULL;
     head = malloc(sizeof(node_t));
     if (head == NULL) {
@@ -16,12 +16,12 @@ node_t init() {
     return head;
 }
 
-int insert(node_t head, unsigned int key, char value[VALUESIZE]) {
+int insert(node_t *head, unsigned int key, char value[VALUESIZE]) {
     if (head == NULL) {
         return -1;
     }
 
-    node_t *node = get(key);
+    node_t *node = get(head, key);
 
     if (node != NULL) {
         return -1;
@@ -47,7 +47,7 @@ int insert(node_t head, unsigned int key, char value[VALUESIZE]) {
     return 0;
 }
 
-int delete(node_t head, unsigned int key) {
+int delete(node_t *head, unsigned int key) {
     if (head == NULL) {
         return -1;
     }
@@ -62,7 +62,7 @@ int delete(node_t head, unsigned int key) {
         iter = iter->next;
     }
 
-    if (iter->next == NULL) {
+    if (iter == NULL) {
         return -1;
     }
 
@@ -75,9 +75,9 @@ int delete(node_t head, unsigned int key) {
     return 0;
 }
 
-node_t get(node_t head, unsigned int key) {
+node_t *get(node_t *head, unsigned int key) {
     if (head == NULL) {
-        return;
+        return NULL;
     }
 
     node_t *iter = head;
