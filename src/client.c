@@ -12,7 +12,7 @@
 
 void client() {
     key_t key_id;
-    struct msgbuf msg;
+    msgbuf_t msg;
     char *text;
 
     key_id = msgget(KEYID, IPC_CREAT|0666);
@@ -23,17 +23,21 @@ void client() {
     }
 
     printf("Start client\n");
+
     while (1) {
         printf("input > ");
         scanf("%s", text);
         msg.mtype = 1;
-        strcpy(msg.mtext, text);
 
-        if (msgsnd(key_id, &msg, sizeof(msg.mtext), 0) < 0) {
+        // strcpy(msg.mtext, text);
+
+        if (msgsnd(key_id, &msg, MSGSIZE, 0) < 0) {
             perror("msgsnd error ");
             exit(0);
         }
-        printf("client: send %s\n", msg.mtext);
+
+        // printf("client: send %s\n", msg.key);
+
         sleep(1);
     }
 }

@@ -10,7 +10,7 @@
 
 void server() {
 	key_t key_id;
-	struct msgbuf msg;
+	msgbuf_t msg;
 
 	key_id = msgget(KEYID, IPC_CREAT|0666);
 
@@ -20,12 +20,13 @@ void server() {
 	}
 
 	printf("Start server\n");
-	
+
 	while (1) {
-		if (msgrcv(key_id, &msg, sizeof(msg.mtext), 0, 0) < 0) {
+		if (msgrcv(key_id, &msg, MSGSIZE, 0, 0) < 0) {
 			perror("msgrcv error ");
 			exit(0);
 		}
-		printf("server: recevied %s\n", msg.mtext);
+
+		// printf("server: recevied %s\n", msg.mtext);
 	}
 }

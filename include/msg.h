@@ -1,12 +1,15 @@
 #ifndef MSGTYPE_H
 #define MSGTYPE_H
 
-#define MTEXTSIZE 128
+#define VALUESIZE 100
 #define KEYID 2817
 
-struct msgbuf {
+typedef struct msgbuf {
     long mtype;
-    char mtext[MTEXTSIZE];
-};
+    unsigned int key;
+    char value[VALUESIZE];
+} msgbuf_t;
+
+#define MSGSIZE (sizeof(msgbuf_t) - sizeof(long))
 
 #endif
