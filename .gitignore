@@ -1,2 +1,5 @@
-#build
+# build
 build/
+
+# macOS auto generated files
+.DS_Store
