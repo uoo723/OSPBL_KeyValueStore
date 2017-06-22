@@ -19,11 +19,13 @@ int main() {
     ht_set(hashtable, 2880, "Sang");
     ht_set(hashtable, 23023, "Woo");
     ht_set(hashtable, 23023, "W");
+    ht_set(hashtable, 1000000 + 2880, "Sang2");
 
     print_node(ht_get(hashtable, 238));
     print_node(ht_get(hashtable, 2880));
     print_node(ht_get(hashtable, 23023));
     print_node(ht_get(hashtable, 3));
+    print_node(ht_get(hashtable, 1000000 + 2880));
 
     printf("ht_remove test\n");
     ht_remove(hashtable, 3);
