@@ -47,7 +47,7 @@ int ll_remove(node_t *head, unsigned int key) {
         return -1;
     }
 
-    node_t *iter = head->next;
+    node_t *iter = head;
 
     while (iter != NULL) {
         if (iter->next != NULL && iter->next->key == key) {
