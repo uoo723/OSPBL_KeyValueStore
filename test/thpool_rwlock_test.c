@@ -12,7 +12,7 @@ void read_task() {
     pthread_rwlock_rdlock(&rwlock);
     int i;
     for (i = 0; i < 20; i++) {
-        printf("read_task_%d in %u\n", i, (int) pthread_self());
+        printf("read_task_%d in %u\n", i, (unsigned int) pthread_self());
     }
     pthread_rwlock_unlock(&rwlock);
 }
@@ -21,7 +21,7 @@ void write_task() {
     pthread_rwlock_wrlock(&rwlock);
     int i;
     for (i = 0; i < 20; i++) {
-        printf("write_task_%d in %u\n", i, (int) pthread_self());
+        printf("write_task_%d in %u\n", i, (unsigned int) pthread_self());
     }
     pthread_rwlock_unlock(&rwlock);
 }
@@ -35,8 +35,9 @@ int main() {
     for (i = 0; i < 4; i++) {
         if (i == 2) {
             thpool_add_work(thpool, (void *) write_task, NULL);
+        } else {
+            thpool_add_work(thpool, (void *) read_task, NULL);
         }
-        thpool_add_work(thpool, (void *) read_task, NULL);
     }
 
     sleep(1);

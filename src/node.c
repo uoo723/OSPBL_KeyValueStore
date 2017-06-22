@@ -88,3 +88,17 @@ node_t *ll_get(node_t *head, unsigned int key) {
 
     return iter;
 }
+
+int ll_destroy(node_t *head) {
+    if (head == NULL)
+        return -1;
+
+    node_t *iter = head;
+    while (iter != NULL) {
+        node_t *temp = iter;
+        iter = iter->next;
+        free(temp);
+    }
+
+    return 0;
+}

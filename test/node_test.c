@@ -31,6 +31,8 @@ int main() {
     if (temp == NULL) {
         printf("ll_get is null\n");
     }
+
+    ll_destroy(list);
     return 0;
 }
 

@@ -14,5 +14,6 @@ int ht_hash(hashtable_t *, unsigned int);
 int ht_set(hashtable_t *, unsigned int, char *);
 int ht_remove(hashtable_t *, unsigned int);
 node_t *ht_get(hashtable_t *, unsigned int);
+int ht_destroy(hashtable_t *);
 
 #endif

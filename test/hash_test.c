@@ -31,6 +31,8 @@ int main() {
         printf("remove failed\n");
     }
     print_node(ht_get(hashtable, 2880));
+
+    ht_destroy(hashtable);
     return 0;
 }
 

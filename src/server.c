@@ -95,6 +95,8 @@ void server() {
 			case TYPE_QUIT:
             thpool_destroy(thpool);
             pthread_rwlock_destroy(&rwlock);
+            ht_destroy(hashtable);
+            
 			int_handler(2);
 			exit(0);
 			break;

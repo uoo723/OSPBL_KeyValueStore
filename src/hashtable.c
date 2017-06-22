@@ -14,7 +14,7 @@ hashtable_t *ht_create(int size) {
         return NULL;
     }
 
-    if ((hashtable->table = malloc(sizeof(node_t *) * size)) == NULL) {
+    if ((hashtable->table = calloc(size, sizeof(node_t *))) == NULL) {
         return NULL;
     }
 
@@ -91,6 +91,19 @@ int ht_remove(hashtable_t *hashtable, unsigned int key) {
 
     if (ll_remove(head, key) < 0) {
         return -1;
+    }
+
+    return 0;
+}
+
+int ht_destroy(hashtable_t *hashtable) {
+    if (hashtable == NULL)
+        return -1;
+
+    int i;
+
+    for (i = 0; i < hashtable->size; i++) {
+        ll_destroy(hashtable->table[i]);
     }
 
     return 0;
