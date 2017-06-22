@@ -19,9 +19,9 @@ int main() {
     ll_insert(list, 5, "aa");
     print(list);
 
-    printf("ll_delete test\n");
-    ll_delete(list, 6);
-    ll_delete(list, 4);
+    printf("ll_remove test\n");
+    ll_remove(list, 6);
+    ll_remove(list, 4);
     print(list);
 
     printf("ll_get test\n");

@@ -42,7 +42,7 @@ int ll_insert(node_t *head, unsigned int key, char *value) {
     return 0;
 }
 
-int ll_delete(node_t *head, unsigned int key) {
+int ll_remove(node_t *head, unsigned int key) {
     if (head == NULL) {
         return -1;
     }
