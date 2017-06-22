@@ -36,40 +36,12 @@ void server() {
 	}
 
 	while (1) {
-		msg.mtype = 0;
-
-		if (msgrcv(key_id, &msg, MSGSIZE, TYPE_REQ_PUT, IPC_NOWAIT) < 0) {
-			if (errno != ENOMSG) {
-				perror("msgrcv error ");
-				return;
-			}
+		if (msgrcv(key_id, &msg, MSGSIZE, TYPE_SERVER, 0) < 0) {
+			perror("msgrcv error ");
+			return;
 		}
 
-		if (msgrcv(key_id, &msg, MSGSIZE, TYPE_REQ_GET, IPC_NOWAIT) < 0) {
-			if (errno != ENOMSG) {
-				perror("msgrcv error ");
-				return;
-			}
-		}
-
-		if (msgrcv(key_id, &msg, MSGSIZE, TYPE_REQ_REMOVE, IPC_NOWAIT) < 0) {
-			if (errno != ENOMSG) {
-				perror("msgrcv error ");
-				return;
-			}
-		}
-
-		if (msgrcv(key_id, &msg, MSGSIZE, TYPE_QUIT, IPC_NOWAIT) < 0) {
-			if (errno != ENOMSG) {
-				perror("msgrcv error ");
-				return;
-			}
-		}
-
-		switch (msg.mtype) {
-			case 0:
-			break;
-
+		switch (msg.type) {
 			case TYPE_REQ_PUT:
 			rcv_put(msg.key, msg.value);
 			break;
@@ -106,7 +78,8 @@ void rcv_get(unsigned int key) {
 		strcpy(msg.value, node->value);
 	}
 
-	msg.mtype = TYPE_RES_GET;
+	msg.mtype = TYPE_CLIENT;
+	msg.type = TYPE_RES_GET;
 
 	if (msgsnd(key_id, &msg, MSGSIZE, 0) < 0) {
 		perror("msgsnd error ");

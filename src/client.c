@@ -94,24 +94,27 @@ void menu_remove() {
 
 void menu_quit() {
     printf("Bye\n");
-    msg.mtype = TYPE_QUIT;
+    msg.mtype = TYPE_SERVER;
+    msg.type = TYPE_QUIT;
     snd_msg();
     exit(0);
 }
 
 void req_put(unsigned int key, char *value) {
-    msg.mtype = TYPE_REQ_PUT;
+    msg.mtype = TYPE_SERVER;
+    msg.type = TYPE_REQ_PUT;
     msg.key = key;
     strcpy(msg.value, value);
     snd_msg();
 }
 
 void req_get(unsigned int key) {
-    msg.mtype = TYPE_REQ_GET;
+    msg.mtype = TYPE_SERVER;
+    msg.type = TYPE_REQ_GET;
     msg.key = key;
     snd_msg();
 
-    if (msgrcv(key_id, &msg, MSGSIZE, TYPE_RES_GET, 0) < 0) {
+    if (msgrcv(key_id, &msg, MSGSIZE, TYPE_CLIENT, 0) < 0) {
         perror("msgrcv error ");
         return;
     }
@@ -124,7 +127,8 @@ void req_get(unsigned int key) {
 }
 
 void req_remove(unsigned int key) {
-    msg.mtype = TYPE_REQ_REMOVE;
+    msg.mtype = TYPE_SERVER;
+    msg.type = TYPE_REQ_REMOVE;
     msg.key = key;
     snd_msg();
 }
