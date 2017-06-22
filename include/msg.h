@@ -2,7 +2,7 @@
 #define MSGTYPE_H
 
 #define VALUESIZE 100
-#define KEYID 2817
+#define KEYID ftok(".", 'P')
 
 #define TYPE_SERVER 1
 #define TYPE_CLIENT 2
