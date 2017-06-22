@@ -75,8 +75,6 @@ node_t *ht_get(hashtable_t *hashtable, unsigned int key) {
     return node;
 }
 
-#include <stdio.h>
-
 int ht_remove(hashtable_t *hashtable, unsigned int key) {
     int index;
     node_t *head;
@@ -92,7 +90,6 @@ int ht_remove(hashtable_t *hashtable, unsigned int key) {
     }
 
     if (ll_remove(head, key) < 0) {
-        printf("key: %d", key);
         return -1;
     }
 
