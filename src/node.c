@@ -16,7 +16,7 @@ node_t *ll_create() {
     return head;
 }
 
-int ll_insert(node_t *head, unsigned int key, char value[VALUESIZE]) {
+int ll_insert(node_t *head, unsigned int key, char *value) {
     if (head == NULL) {
         return -1;
     }
@@ -36,13 +36,8 @@ int ll_insert(node_t *head, unsigned int key, char value[VALUESIZE]) {
     node->key = key;
     strcpy(node->value, value);
 
-    node_t *iter = head;
-
-    while (iter->next != NULL) {
-        iter = iter->next;
-    }
-
-    iter->next = node;
+    node->next = head->next;
+    head->next = node;
 
     return 0;
 }

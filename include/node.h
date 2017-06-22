@@ -10,7 +10,7 @@ typedef struct node {
 } node_t;
 
 node_t *ll_create();
-int ll_insert(node_t *, unsigned int, char[VALUESIZE]);
+int ll_insert(node_t *, unsigned int, char *);
 int ll_delete(node_t *, unsigned int);
 node_t *ll_get(node_t *, unsigned int);
 
