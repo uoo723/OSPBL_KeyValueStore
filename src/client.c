@@ -22,7 +22,7 @@ static void snd_msg();
 static key_t key_id;
 static msgbuf_t msg;
 
-void client() {
+void client_non_test() {
     if ((key_id = msgget(KEYID, IPC_CREAT|0666)) < 0) {
         perror("msgget error ");
         exit(0);

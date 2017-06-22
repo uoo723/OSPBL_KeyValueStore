@@ -24,9 +24,8 @@ void client_view() {
 }
 
 void show_get_result(unsigned int key, char *value) {
-    printf("%u\n", key);
     if (strcmp(value, NODATA) == 0) {
-        printf("no data\n");
+        printf("value: no data\n");
     } else {
         printf("value: %s\n", value);
     }
