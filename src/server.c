@@ -14,11 +14,11 @@
 #include "hashtable.h"
 #include "node.h"
 
-key_t key_id;
-msgbuf_t msg;
-hashtable_t *hashtable;
+static key_t key_id;
+static msgbuf_t msg;
+static hashtable_t *hashtable;
 
-void int_handler(int signo) {
+static void int_handler(int signo) {
     msgctl(key_id, IPC_RMID, 0);
 }
 
@@ -73,7 +73,7 @@ void rcv_get(unsigned int key) {
 	node_t *node = ht_get(hashtable, key);
 
 	if (node == NULL) {
-		msg.key = NODATA;
+		strcpy(msg.value, NODATA);
 	} else {
 		strcpy(msg.value, node->value);
 	}

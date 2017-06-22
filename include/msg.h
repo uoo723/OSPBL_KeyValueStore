@@ -13,7 +13,7 @@
 #define TYPE_RES_GET 40
 #define TYPE_QUIT 50
 
-#define NODATA -1
+#define NODATA ""
 
 typedef struct msgbuf {
     /* message queue type */
