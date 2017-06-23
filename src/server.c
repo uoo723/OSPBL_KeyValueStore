@@ -16,14 +16,14 @@
 #include "node.h"
 #include "thpool.h"
 
+#define THREAD 4
+
 typedef threadpool threadpool_t;
 
 typedef struct {
     unsigned int key;
     char value[VALUESIZE];
 } args_t;
-
-static int thread_num = 4;
 
 static key_t key_id;
 
@@ -53,7 +53,7 @@ void server() {
 		exit(0);
 	}
 
-    if ((thpool = thpool_init(thread_num)) == NULL) {
+    if ((thpool = thpool_init(THREAD)) == NULL) {
         perror("thpool is null ");
         exit(0);
     }
