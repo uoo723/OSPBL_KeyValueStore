@@ -25,7 +25,8 @@ typedef struct {
     char value[VALUESIZE];
 } args_t;
 
-static key_t key_id;
+static key_t server_key_id;
+static key_t client_key_id;
 
 static hashtable_t *hashtable;
 static threadpool_t thpool;
@@ -37,16 +38,24 @@ static void rcv_get_internal(void *);
 static void rcv_remove_internal(void *);
 
 static void int_handler(int signo) {
-    msgctl(key_id, IPC_RMID, 0);
+    msgctl(server_key_id, IPC_RMID, 0);
+    msgctl(client_key_id, IPC_RMID, 0);
 }
+
+static int count;
 
 void server() {
 	signal(SIGINT, int_handler);
 
-	if ((key_id = msgget(KEYID, IPC_CREAT|0666)) < 0) {
+	if ((server_key_id = msgget(SERVER_KEYID, IPC_CREAT|0666)) < 0) {
 		perror("msgget error in client ");
 		exit(0);
 	}
+
+    if ((client_key_id = msgget(CLIENT_KEYID, IPC_CREAT|0666)) < 0) {
+        perror("msgget error in client ");
+		exit(0);
+    }
 
 	if ((hashtable = ht_create(1000000)) == NULL) {
 		perror("hashtable is null ");
@@ -67,11 +76,12 @@ void server() {
     msgbuf_t msg;
 
 	while (1) {
-		if (msgrcv(key_id, &msg, MSGSIZE, TYPE_SERVER, 0) < 0) {
+		if (msgrcv(server_key_id, &msg, MSGSIZE, 0, 0) < 0) {
 			perror("msgrcv error in server ");
 			return;
 		}
 
+        // printf("msgrcv %d\n", count++);
 		switch (msg.type) {
 			case TYPE_REQ_PUT:
 
@@ -175,7 +185,7 @@ void rcv_get(unsigned int key) {
 	msg.mtype = TYPE_CLIENT;
 	msg.type = TYPE_RES_GET;
     msg.key = key;
-	if (msgsnd(key_id, &msg, MSGSIZE, 0) < 0) {
+	if (msgsnd(client_key_id, &msg, MSGSIZE, 0) < 0) {
 		perror("msgsnd error in server ");
 		return;
 	}

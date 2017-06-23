@@ -1,5 +1,7 @@
 #define MAX_CONTENTS 100000
-#define MAX_OPERATION 500000
+#define MAX_OPERATION 1000000
+
+#define THREAD 100
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -38,7 +40,7 @@ static time_t end_time;
 void client_test() {
     printf("client_test!!\n");
 
-    if ((thpool = thpool_init(4)) == NULL) {
+    if ((thpool = thpool_init(THREAD)) == NULL) {
         perror("thpool is null ");
         exit(0);
     }

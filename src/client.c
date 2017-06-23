@@ -19,10 +19,16 @@ static void menu_quit();
 
 static void snd_msg();
 
-static key_t key_id;
+static key_t server_key_id;
+static key_t client_key_id;
 
 void client() {
-    if ((key_id = msgget(KEYID, IPC_CREAT|0666)) < 0) {
+    if ((server_key_id = msgget(SERVER_KEYID, IPC_CREAT|0666)) < 0) {
+        perror("msgget error in client ");
+        exit(0);
+    }
+
+    if ((client_key_id = msgget(CLIENT_KEYID, IPC_CREAT|0666)) < 0) {
         perror("msgget error in client ");
         exit(0);
     }
@@ -50,7 +56,7 @@ void req_get(unsigned int key) {
     msg.key = key;
     snd_msg(&msg);
 
-    if (msgrcv(key_id, &msg, MSGSIZE, TYPE_CLIENT, 0) < 0) {
+    if (msgrcv(client_key_id, &msg, MSGSIZE, 0, 0) < 0) {
         perror("msgrcv error in client ");
         return;
     }
@@ -75,7 +81,7 @@ void req_quit() {
 }
 
 static void snd_msg(msgbuf_t *msg) {
-    if (msgsnd(key_id, msg, MSGSIZE, 0) < 0) {
+    if (msgsnd(server_key_id, msg, MSGSIZE, 0) < 0) {
         perror("msgsnd error in client ");
         return;
     }
