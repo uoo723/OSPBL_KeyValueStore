@@ -40,7 +40,7 @@ int main() {
         }
     }
 
-    sleep(1);
+    thpool_wait(thpool);
     thpool_destroy(thpool);
     pthread_rwlock_destroy(&rwlock);
     return 0;

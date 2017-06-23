@@ -23,8 +23,10 @@ typedef struct {
     char value[VALUESIZE];
 } args_t;
 
+static int thread_num = 4;
+
 static key_t key_id;
-static msgbuf_t msg;
+
 static hashtable_t *hashtable;
 static threadpool_t thpool;
 
@@ -42,7 +44,7 @@ void server() {
 	signal(SIGINT, int_handler);
 
 	if ((key_id = msgget(KEYID, IPC_CREAT|0666)) < 0) {
-		perror("msgget error ");
+		perror("msgget error in client ");
 		exit(0);
 	}
 
@@ -51,7 +53,7 @@ void server() {
 		exit(0);
 	}
 
-    if ((thpool = thpool_init(4)) == NULL) {
+    if ((thpool = thpool_init(thread_num)) == NULL) {
         perror("thpool is null ");
         exit(0);
     }
@@ -62,41 +64,60 @@ void server() {
     }
 
     args_t *args = NULL;
+    msgbuf_t msg;
 
 	while (1) {
 		if (msgrcv(key_id, &msg, MSGSIZE, TYPE_SERVER, 0) < 0) {
-			perror("msgrcv error ");
+			perror("msgrcv error in server ");
 			return;
 		}
 
 		switch (msg.type) {
 			case TYPE_REQ_PUT:
+
+            #ifndef SINGLE_THREAD
             args = malloc(sizeof(args_t));
             args->key = msg.key;
             strcpy(args->value, msg.value);
 
             thpool_add_work(thpool, (void *) rcv_put_internal, (void *) args);
+            #else
+            rcv_put(msg.key, msg.value);
+            #endif
+
 			break;
 
 			case TYPE_REQ_GET:
+
+            #ifndef SINGLE_THREAD
             args = malloc(sizeof(args_t));
             args->key = msg.key;
 
             thpool_add_work(thpool, (void *) rcv_get_internal, (void *) args);
+            #else
+            rcv_get(msg.key);
+            #endif
+
 			break;
 
 			case TYPE_REQ_REMOVE:
+
+            #ifndef SINGLE_THREAD
             args = malloc(sizeof(args_t));
             args->key = msg.key;
 
             thpool_add_work(thpool, (void *) rcv_remove_internal, (void *) args);
+            #else
+            rcv_remove(msg.key);
+            #endif
+
 			break;
 
 			case TYPE_QUIT:
             thpool_destroy(thpool);
             pthread_rwlock_destroy(&rwlock);
             ht_destroy(hashtable);
-            
+
 			int_handler(2);
 			exit(0);
 			break;
@@ -143,6 +164,7 @@ void rcv_put(unsigned int key, char *value) {
 
 void rcv_get(unsigned int key) {
 	node_t *node = ht_get(hashtable, key);
+    msgbuf_t msg;
 
 	if (node == NULL) {
 		strcpy(msg.value, NODATA);
@@ -152,13 +174,11 @@ void rcv_get(unsigned int key) {
 
 	msg.mtype = TYPE_CLIENT;
 	msg.type = TYPE_RES_GET;
-
+    msg.key = key;
 	if (msgsnd(key_id, &msg, MSGSIZE, 0) < 0) {
-		perror("msgsnd error ");
+		perror("msgsnd error in server ");
 		return;
 	}
-
-	msg.mtype = 0;
 }
 
 void rcv_remove(unsigned int key) {

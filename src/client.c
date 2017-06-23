@@ -20,35 +20,38 @@ static void menu_quit();
 static void snd_msg();
 
 static key_t key_id;
-static msgbuf_t msg;
 
-void client_non_test() {
+void client() {
     if ((key_id = msgget(KEYID, IPC_CREAT|0666)) < 0) {
-        perror("msgget error ");
+        perror("msgget error in client ");
         exit(0);
     }
 
+    #ifndef CLIENT_TEST
     while (1) {
         client_view();
     }
+    #endif
 }
 
 void req_put(unsigned int key, char *value) {
+    msgbuf_t msg;
     msg.mtype = TYPE_SERVER;
     msg.type = TYPE_REQ_PUT;
     msg.key = key;
     strcpy(msg.value, value);
-    snd_msg();
+    snd_msg(&msg);
 }
 
 void req_get(unsigned int key) {
+    msgbuf_t msg;
     msg.mtype = TYPE_SERVER;
     msg.type = TYPE_REQ_GET;
     msg.key = key;
-    snd_msg();
+    snd_msg(&msg);
 
     if (msgrcv(key_id, &msg, MSGSIZE, TYPE_CLIENT, 0) < 0) {
-        perror("msgrcv error ");
+        perror("msgrcv error in client ");
         return;
     }
 
@@ -56,22 +59,24 @@ void req_get(unsigned int key) {
 }
 
 void req_remove(unsigned int key) {
+    msgbuf_t msg;
     msg.mtype = TYPE_SERVER;
     msg.type = TYPE_REQ_REMOVE;
     msg.key = key;
-    snd_msg();
+    snd_msg(&msg);
 }
 
 void req_quit() {
+    msgbuf_t msg;
     msg.mtype = TYPE_SERVER;
     msg.type = TYPE_QUIT;
-    snd_msg();
+    snd_msg(&msg);
     exit(0);
 }
 
-static void snd_msg() {
-    if (msgsnd(key_id, &msg, MSGSIZE, 0) < 0) {
-        perror("msgsnd error ");
+static void snd_msg(msgbuf_t *msg) {
+    if (msgsnd(key_id, msg, MSGSIZE, 0) < 0) {
+        perror("msgsnd error in client ");
         return;
     }
 }
