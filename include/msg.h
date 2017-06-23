@@ -3,7 +3,7 @@
 
 #define VALUESIZE 100
 #define SERVER_KEYID ftok(".", 'S')
-#define CLIENT_KEYID ftok(",", 'C')
+#define CLIENT_KEYID ftok(".", 'C')
 
 #define TYPE_SERVER 1
 #define TYPE_CLIENT 2
